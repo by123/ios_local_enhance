@@ -33,6 +33,7 @@ class ModelLoader {
     // 加载模型
     func loadModelSync(model: EnhanceModel) async -> Bool {
         return await withCheckedContinuation { continuation in
+            releaseAllModels()
             DispatchQueue.global().async {
                 do {
                     switch model {
@@ -57,6 +58,15 @@ class ModelLoader {
                 }
             }
         }
+    }
+    
+    private func releaseAllModels() {
+        realesrgan512Model = nil
+        realesrganAnime512Model = nil
+        aesrgan256Model = nil
+        bsrgan512Model = nil
+        lesrcnn128Model = nil
+        mmrealsrgan256Model = nil
     }
     
     // 主处理函数
@@ -93,28 +103,40 @@ class ModelLoader {
                 switch(model) {
                 case .realesrgan:
                     // 输出 (2048x2048)
-                    let prediction = try self.realesrgan512Model!.prediction(input: pixelBuffer)
-                    outputPixelBuffer = prediction.activation_out
+                    if let realesrgan512Model = self.realesrgan512Model {
+                        let prediction = try realesrgan512Model.prediction(input: pixelBuffer)
+                        outputPixelBuffer = prediction.activation_out
+                    }
                 case .realesrganAnime:
                     // 输出 (2048x2048)
-                    let prediction = try self.realesrganAnime512Model!.prediction(input: pixelBuffer)
-                    outputPixelBuffer = prediction.activation_out
+                    if let realesrganAnime512Model = self.realesrganAnime512Model {
+                        let prediction = try realesrganAnime512Model.prediction(input: pixelBuffer)
+                        outputPixelBuffer = prediction.activation_out
+                    }
                 case .aesrgan:
                     //输出 (1024x1024)
-                    let prediction = try self.aesrgan256Model!.prediction(input: pixelBuffer)
-                    outputPixelBuffer = prediction.activation_out
+                    if let aesrgan256Model = self.aesrgan256Model {
+                        let prediction = try aesrgan256Model.prediction(input: pixelBuffer)
+                        outputPixelBuffer = prediction.activation_out
+                    }
                 case .bsrgan:
                     // 输出 (256x256)
-                    let prediction = try self.bsrgan512Model!.prediction(input: bsrgan512Input(x: pixelBuffer))
-                    outputPixelBuffer = prediction.activation_out
+                    if let bsrgan512Model = self.bsrgan512Model {
+                        let prediction = try bsrgan512Model.prediction(input: bsrgan512Input(x: pixelBuffer))
+                        outputPixelBuffer = prediction.activation_out
+                    }
                 case .lesrcnn:
                     // 输出 (512x512)
-                    let prediction = try self.lesrcnn128Model!.prediction(input: lesrcnn128Input(x: pixelBuffer))
-                    outputPixelBuffer = prediction.activation_out
+                    if let lesrcnn128Model = self.lesrcnn128Model {
+                        let prediction = try lesrcnn128Model.prediction(input: lesrcnn128Input(x: pixelBuffer))
+                        outputPixelBuffer = prediction.activation_out
+                    }
                 case .mmrealsrgan:
                     //输出 (1024x1024)
-                    let prediction = try self.mmrealsrgan256Model!.prediction(input: mmrealsrgan256Input(x_1: pixelBuffer))
-                    outputPixelBuffer = prediction.activation_out
+                    if let mmrealsrgan256Model = self.mmrealsrgan256Model {
+                        let prediction = try mmrealsrgan256Model.prediction(input: mmrealsrgan256Input(x_1: pixelBuffer))
+                        outputPixelBuffer = prediction.activation_out
+                    }
                 }
                 
                 // 转换为UIImage
@@ -132,7 +154,7 @@ class ModelLoader {
                         completion(finalImage)
                     }
                 }
-                
+                outputPixelBuffer = nil
             } catch {
                 print("模型推理失败: \(error)")
                 DispatchQueue.main.async { completion(nil) }
@@ -322,7 +344,7 @@ class ModelLoader {
 
 extension UIImage {
     func resized() -> UIImage? {
-        var scaleSize: CGSize = self.size
+        let scaleSize: CGSize = self.size
         let renderer = UIGraphicsImageRenderer(size: scaleSize)
         return renderer.image { _ in
             self.draw(in: CGRect(origin: .zero, size: scaleSize))
