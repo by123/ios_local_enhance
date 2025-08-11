@@ -1,0 +1,18 @@
+{
+  "Inputs" : {
+    "x" : {
+      "MLFeatureShortDescription" : "input image"
+    }
+  },
+  "Outputs" : {
+    "activation_out" : {
+      "MLFeatureShortDescription" : "output image"
+    }
+  },
+  "TrainingInputs" : {
+
+  },
+  "States" : {
+
+  }
+}

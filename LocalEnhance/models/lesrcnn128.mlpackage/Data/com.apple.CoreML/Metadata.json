@@ -1,0 +1,8 @@
+{
+  "MLModelDescriptionKey" : "Lightweight Image Super-Resolution with Enhanced CNN",
+  "MLModelCreatorDefinedKey" : {
+    "com.github.apple.coremltools.version" : "5.2.0",
+    "com.github.apple.coremltools.source" : "torch==1.12.0+cu113"
+  },
+  "MLModelAuthorKey" : "https:\/\/github.com\/hellloxiaotian\/LESRCNN"
+}

@@ -1,0 +1,24 @@
+{
+    "fileFormatVersion": "1.0.0",
+    "itemInfoEntries": {
+        "D3CF0B11-493C-4258-A653-48475D5E6E15": {
+            "author": "com.apple.CoreML",
+            "description": "External FeatureDescription Overlay",
+            "name": "FeatureDescriptions.json",
+            "path": "com.apple.CoreML/FeatureDescriptions.json"
+        },
+        "E6AEEC1F-21A2-4628-8126-F949FA65083D": {
+            "author": "com.apple.CoreML",
+            "description": "CoreML Model Specification",
+            "name": "realesrganAnime512.mlmodel",
+            "path": "com.apple.CoreML/realesrganAnime512.mlmodel"
+        },
+        "F22865EA-5A62-49A6-98F2-3235D5000905": {
+            "author": "com.apple.CoreML",
+            "description": "External Metadata Overlay",
+            "name": "Metadata.json",
+            "path": "com.apple.CoreML/Metadata.json"
+        }
+    },
+    "rootModelIdentifier": "E6AEEC1F-21A2-4628-8126-F949FA65083D"
+}

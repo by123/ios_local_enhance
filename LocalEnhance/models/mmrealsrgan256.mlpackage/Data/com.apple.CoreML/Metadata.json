@@ -1,0 +1,10 @@
+{
+  "MLModelVersionStringKey" : "--",
+  "MLModelDescriptionKey" : "Metric Learning based Interactive Modulation for Real-World Super-Resolution. Converted by https:\/\/github.com\/john-rocky\/CoreML-Models",
+  "MLModelCreatorDefinedKey" : {
+    "com.github.apple.coremltools.version" : "5.2.0",
+    "com.github.apple.coremltools.source" : "torch==1.12.1+cu113"
+  },
+  "MLModelAuthorKey" : "https:\/\/github.com\/TencentARC\/MM-RealSR",
+  "MLModelLicenseKey" : "BSD 3-Clause License"
+}
