@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreML
 import PhotosUI
+import Photos
 
 struct ContentView: View {
     
@@ -102,14 +103,32 @@ struct ContentView: View {
                     reset()
                     clickEnhance()
                 } label: {
-                    Text("高清").foregroundStyle(Color.white)
+                    Text("高清")
+                        .frame(width: 120, height: 40)
+                        .foregroundStyle(Color.white)
                 }
                 .frame(width: 120, height: 40)
                 .background(Color.blue)
                 .cornerRadius(20)
             }
             
+            Button {
+                if let outputImage = self.outputImage {
+                    saveImageToPhotoAlbum(outputImage)
+                } else {
+                    resultText = "无高清图片"
+                }
+            } label: {
+                Text("保存到相册")
+                    .frame(width: 260, height: 40)
+                    .foregroundStyle(Color.white)
+            }
+            .frame(width: 260, height: 40)
+            .background(Color.blue)
+            .cornerRadius(20)
+            
         }
+        .padding(.vertical, 24)
         .padding(20)
         .onAppear {
             loadModel(selectedModel)
@@ -125,12 +144,14 @@ struct ContentView: View {
             resultText = "高清中..."
             loader.processImage(inputImage, EnhanceModel(rawValue: selectedModel)) { resultImage in
                 self.outputImage = resultImage?.resized()
-                
+                isPressing = true
                 let endTime = Int(Date().timeIntervalSince1970 * 1000)
                 if let outputImage {
                     resultText = "高清前：\(inputImage.size)\n高清后：\(outputImage.size)\n消耗时间：\(endTime - startTime) 毫秒"
                 }
             }
+        } else {
+            resultText = "无图片"
         }
     }
     
@@ -149,6 +170,12 @@ struct ContentView: View {
             }
         }
     }
+    
+    func saveImageToPhotoAlbum(_ image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        resultText = "保存成功"
+    }
+    
     
 }
 
