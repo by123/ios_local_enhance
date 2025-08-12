@@ -70,7 +70,7 @@ class ModelLoader {
     }
     
     // 主处理函数
-    func processImage(_ inputImage: UIImage, _ model: EnhanceModel?, completion: @escaping (UIImage?) -> Void) {
+    func processImage(_ inputImage: UIImage, _ model: EnhanceModel?, _ hd: String, completion: @escaping (UIImage?) -> Void) {
         guard let model else { return }
         var inputSize = 512
         if(model.rawValue.contains("256")) {
@@ -147,7 +147,8 @@ class ModelLoader {
                     let finalImage = self.adaptOutputToOriginalAspectRatio(
                         outputImage: outputImage,
                         originalSize: originalSize,
-                        intputSize: CGFloat(inputSize)
+                        intputSize: CGFloat(inputSize),
+                        hd: hd
                     )
                     
                     DispatchQueue.main.async {
@@ -262,7 +263,7 @@ class ModelLoader {
     }
     
     // 将2048x2048的输出等比例适配到原始图片比例
-    private func adaptOutputToOriginalAspectRatio(outputImage: UIImage, originalSize: CGSize, intputSize: CGFloat) -> UIImage {
+    private func adaptOutputToOriginalAspectRatio(outputImage: UIImage, originalSize: CGSize, intputSize: CGFloat, hd: String) -> UIImage {
         let outputSize = outputImage.size // 2048x2048
         
         // 计算原始图片在inputSizexinputSize中的缩放信息
@@ -294,8 +295,12 @@ class ModelLoader {
         
         print("裁剪后尺寸: \(croppedImage.size)")
         
-        // 最终将图片放大至 2k
-        var scale = 2048 / max(cropWidth, cropHeight)
+        // 最终将图片放大
+        var final = 2048.0
+        if(hd == "4K"){
+            final = 4096.0
+        }
+        var scale = final / max(cropWidth, cropHeight)
         scale = (scale > 1) ? scale : 1.0
         var finalImage: UIImage? = nil
         print("放大倍数: \(scale)")

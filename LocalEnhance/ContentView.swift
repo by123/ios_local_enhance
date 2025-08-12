@@ -19,15 +19,24 @@ struct ContentView: View {
     @State private var isPressing = false
     let models: [EnhanceModel] = [.realesrgan, .realesrganAnime, .aesrgan , .bsrgan, .lesrcnn, .mmrealsrgan]
     @State private var selectedModel: String = EnhanceModel.realesrgan.rawValue
+    let hds = ["2K", "4K"]
+    @State private var selectedHD: String = "2K"
     
     let loader = ModelLoader()
     
     var body: some View {
         VStack {
-            CustomDropdown(selection: $selectedModel, options: models.map{$0.rawValue}, placeholder: "选择模型") { model in
-                reset()
-                loadModel(model)
-                
+            HStack{
+                VStack{
+                    CustomDropdown(selection: $selectedModel, options: models.map{$0.rawValue}, placeholder: "") { model in
+                        reset()
+                        loadModel(model)
+                    }
+                }.frame(width: 250)
+                CustomDropdown(selection: $selectedHD, options: hds, placeholder: "") { result in
+                    reset()
+                    selectedHD = result
+                }
             }
             ZStack{
                 if let inputImage {
@@ -101,7 +110,7 @@ struct ContentView: View {
                 
                 Button {
                     reset()
-                    clickEnhance()
+                    clickEnhance(hd: selectedHD)
                 } label: {
                     Text("高清")
                         .frame(width: 120, height: 40)
@@ -138,11 +147,11 @@ struct ContentView: View {
     
     
     
-    func clickEnhance() {
+    func clickEnhance(hd: String) {
         if let inputImage {
             let startTime = Int(Date().timeIntervalSince1970 * 1000)
             resultText = "高清中..."
-            loader.processImage(inputImage, EnhanceModel(rawValue: selectedModel)) { resultImage in
+            loader.processImage(inputImage, EnhanceModel(rawValue: selectedModel), hd) { resultImage in
                 self.outputImage = resultImage?.resized()
                 isPressing = true
                 let endTime = Int(Date().timeIntervalSince1970 * 1000)
